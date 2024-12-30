@@ -10,7 +10,5 @@ urlpatterns = [
     path("manufacturer/", ManufacturerListView.as_view(), name="manufacturer"),
     path("car/", CarListView.as_view(), name="car"),
     path("driver/", DriverListView.as_view(), name="driver"),
-    # path("__debug__/", include(debug_toolbar_urls)),
-
-] + debug_toolbar_urls()
+]
 app_name = "taxi"
