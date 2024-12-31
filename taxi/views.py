@@ -1,3 +1,4 @@
+from django.http import HttpRequest, HttpResponse
 from django.views import generic
 from django.shortcuts import render
 from taxi.models import Driver, Car, Manufacturer
@@ -21,6 +22,14 @@ class ManufacturerListView(generic.ListView):
 
 class CarListView(generic.ListView):
     model = Car
+    queryset = Car.objects.select_related("manufacturer")
 
 class DriverListView(generic.ListView):
     model = Driver
+
+def cardetailview(request: HttpRequest, pk: int) -> HttpResponse:
+    car = Car.objects.get(id=pk)
+    context = {
+        "car": car,
+    }
+    return render(request, "taxi/car_detail.html", context=context)
