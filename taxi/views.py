@@ -15,6 +15,7 @@ def index(request):
 
     return render(request, "taxi/index.html", context=context)
 
+
 class ManufacturerListView(generic.ListView):
     model = Manufacturer
     # template_name = "templates/taxi/manufacturer_list.html"
@@ -23,9 +24,19 @@ class ManufacturerListView(generic.ListView):
 class CarListView(generic.ListView):
     model = Car
     queryset = Car.objects.select_related("manufacturer")
+    paginate_by = 5
+
 
 class DriverListView(generic.ListView):
     model = Driver
+    queryset = Driver.objects.prefetch_related("cars__manufacturer")
+    paginate_by = 5
+
+
+class DriverDetailView(generic.DetailView):
+    model = Driver
+    queryset = Driver.objects.prefetch_related("cars__manufacturer")
+
 
 def cardetailview(request: HttpRequest, pk: int) -> HttpResponse:
     car = Car.objects.get(id=pk)
@@ -33,3 +44,13 @@ def cardetailview(request: HttpRequest, pk: int) -> HttpResponse:
         "car": car,
     }
     return render(request, "taxi/car_detail.html", context=context)
+
+
+def driverdetailview(request: HttpRequest, pk: int) -> HttpResponse:
+    driver = Driver.objects.get(id=pk)
+    context = {
+        "driver": driver,
+    }
+    return render(
+        request, HttpRequest, "taxi/driver_detail.html", context=context
+    )
